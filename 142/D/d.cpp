@@ -2,27 +2,29 @@
 using namespace std;
 typedef long long ll;
 #define rep(i, n) for(int i = 0; i < n; i++)
-ll c;
-ll a1, b1;
-ll g;
-ll gcd1(ll a, ll b) { return b ? gcd1(b,a%b) : a; }
-ll gcd(ll a, ll b) {
-    if(b != 0){
-        if(b1 % (b/g) == 0 && b1 % (a/g) == 0)
-            c++;
-        return gcd(b,a%b);
-    }else{
-        return a;
+ll gcd(ll a, ll b) { return b ? gcd(b,a%b) : a; }
+
+vector<pair<ll,int>> factorize(ll n) {
+  vector<pair<ll,int>> res;
+  for (ll i = 2; i*i <= n; ++i) {
+    if (n%i) continue;
+    res.emplace_back(i,0);
+    while (n%i == 0) {
+      n /= i;
+      res.back().second++;
     }
+  }
+  if (n != 1) res.emplace_back(n,1);
+  return res;
 }
 
 int main(void){
-    c = 0;
-    cin >> a1 >>b1;
-    if(a1 < b1)
-        swap(a1, b1);
-    g = gcd1(a1, b1);
-    gcd(a1,b1);
-    cout << c+1 << endl;
+    ll a, b;
+    cin >> a >>b;
+
+    ll g = gcd(a, b);
+    auto f = factorize(g);
+
+    cout << f.size() + 1 << endl;
     return 0;
 }

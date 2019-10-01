@@ -2,12 +2,8 @@
 using namespace std;
 typedef long long ll;
 #define rep(i, n) for(int i = 0; i < n; i++)
-
-//最大公約数,最小公倍数
 ll gcd(ll a, ll b) { return b ? gcd(b,a%b) : a; }
-ll lcm(ll a, ll b) { return a/gcd(a,b)*b; }
 
-//素因数分解
 vector<pair<ll,int>> factorize(ll n) {
   vector<pair<ll,int>> res;
   for (ll i = 2; i*i <= n; ++i) {
@@ -20,4 +16,15 @@ vector<pair<ll,int>> factorize(ll n) {
   }
   if (n != 1) res.emplace_back(n,1);
   return res;
+}
+
+int main(void){
+    ll a, b;
+    cin >> a >>b;
+
+    ll g = gcd(a, b);
+    auto f = factorize(g);
+
+    cout << f.size() + 1 << endl;
+    return 0;
 }

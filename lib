@@ -21,3 +21,11 @@ vector<pair<ll,int>> factorize(ll n) {
   if (n != 1) res.emplace_back(n,1);
   return res;
 }
+
+//x以下の個数(2分探索)
+sort(a, a+n);
+count_a = upper_bound(a, a + n, x) - a;
+
+//x以上の個数(2分探索)
+sort(b, b+n);
+count_b = b + n - lower_bound(b, b + n, x);

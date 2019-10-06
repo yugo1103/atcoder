@@ -3,64 +3,48 @@ using namespace std;
 typedef long long ll;
 #define rep(i, n) for(int i = 0; i < n; i++)
 
-vector<bool> node;
-int n, m;
+int n;
+bool graph[60][60];
+bool vis[60];
 
-bool dfs(ll dp, vector<vector<ll>> path){
-    if(node[dp] == true){
-        return false;
-    }else{
-        node[dp] = true;
+void dfs(int x){
+    if(vis[x]) return;
+    vis[x] = true;
+    for(int i = 0; i < n; i++){
+        if(graph[x][i]){
+            dfs(i);
+        }
     }
-
-    for(ll p: path[dp]){
-        dfs(p, path);
-    }
-
-    bool check = true;
-    rep(i, n){
-        if(node[i] == false)
-            check = false;
-    }
-
-    return check;
 }
 
+
 int main(void){
-    vector<vector<ll>> path;
+    int m;
     cin >> n >> m;
-
-    rep(i, n){
-        path.push_back({});
-        node.push_back(false);
-    }
-
-    pair<ll, ll> input[m];
+    pair<ll, ll> path[m];
     rep(i, m){
-        cin >> input[i].first >> input[i].second;
-        input[i].first--;
-        input[i].second--;
-        path[input[i].first].push_back(input[i].second);
-        path[input[i].second].push_back(input[i].first);
+        cin >> path[i].first >> path[i].second;
+        path[i].first--;
+        path[i].second--;
+        graph[path[i].first][path[i].second] = true;
+        graph[path[i].second][path[i].first] = true;
     }
 
     ll count = 0;
     rep(i, m){
-        vector<vector<ll>> path_del;
-        rep(j, m){
-            path_del.push_back({j});
-        }
-        rep(j, m){
-            if(i == j) continue;
-            path_del[input[j].first].push_back(input[j].second);
-            path_del[input[j].second].push_back(input[j].first);
-        }
+        graph[path[i].first][path[i].second] = false;
+        graph[path[i].second][path[i].first] = false;
+        for(ll i = 0; i < n; i++) vis[i] = false;
+        dfs(0);
 
-        rep(j, n){
-            node[j] = false;
+        for(int i = 0; i < n; i++){
+            if(!vis[i]){
+                count++;
+                break;
+            }
         }
-        if(!dfs(0, path_del))
-            count++;
+        graph[path[i].first][path[i].second] = true;
+        graph[path[i].second][path[i].first] = true;
     }
 
     cout << count << endl;

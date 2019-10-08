@@ -1,38 +1,38 @@
 #include<bits/stdc++.h>
 using namespace std;
+typedef long long ll;
 
 #define rep(i, n) for(int i = 0; i < n; i++)
 
 int main(void){
     int n, m;
     int ans;
-    priority_queue<int> reward[100005];
 
     cin >> n >> m;
-    m--;
 
-    int a, b, j, max_id, max_rew;
+    map<ll, vector<ll>> part;
     rep(i, n){
-        cin >> a >> b;
-        a--;
-        reward[a].push(b);
+        ll tmp_a, tmp_b;
+        cin >> tmp_a >> tmp_b;
+
+        if(!part.count(tmp_a)){
+            part[tmp_a] = {};
+        }
+        part[tmp_a].push_back(tmp_b);
     }
 
-    rep(i, m + 1){
-        max_rew = 0;
-        rep(j, i + 1){
-            if(!reward[j].empty()){
-                if(max_rew < reward[j].top()){
-                    max_rew = reward[j].top();
-                    max_id = j;
-                }
-            }
+    ll sum = 0;
+    priority_queue<ll> cost;
+    for(int i = 1; i <= m; i++){
+        for(ll p : part[i]){
+            cost.push(p);
         }
-        if(!reward[max_id].empty()){
-            ans += reward[max_id].top();
-            reward[max_id].pop();
+        if(cost.size() != 0){
+            sum += cost.top();
+            cost.pop();
         }
     }
 
-    cout << ans << endl;
+
+    cout << sum << endl;
 }

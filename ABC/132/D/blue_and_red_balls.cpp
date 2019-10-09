@@ -4,34 +4,6 @@ typedef long long ll;
 typedef long double ld;
 #define rep(i, n) for(int i = 0; i < n; i++)
 
-//最大公約数,最小公倍数
-ll gcd(ll a, ll b) { return b ? gcd(b,a%b) : a; }
-ll lcm(ll a, ll b) { return a/gcd(a,b)*b; }
-
-//素因数分解
-vector<pair<ll,int>> factorize(ll n) {
-  vector<pair<ll,int>> res;
-  for (ll i = 2; i*i <= n; ++i) {
-    if (n%i) continue;
-    res.emplace_back(i,0);
-    while (n%i == 0) {
-      n /= i;
-      res.back().second++;
-    }
-  }
-  if (n != 1) res.emplace_back(n,1);
-  return res;
-}
-
-//x以下の個数(2分探索)
-sort(a, a+n);
-count_a = upper_bound(a, a + n, x) - a;
-
-//x以上の個数(2分探索)
-sort(b, b+n);
-count_b = b + n - lower_bound(b, b + n, x);
-
-//２項定理(MOD使用)
 const ll MAX = 510000;
 const ll MOD = 1000000007;
 
@@ -54,4 +26,15 @@ long long COM(ll n, ll k){
     if (n < k) return 0;
     if (n < 0 || k < 0) return 0;
     return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
+}
+
+int main(void){
+    ll k, n;
+    cin >> n >> k;
+
+    COMinit();
+
+    // 求める
+    for (ll i = 1; i <= k; ++i)
+        cout << COM(k-1, i-1) * COM(n-k+1, i) % MOD << endl;
 }

@@ -4,36 +4,35 @@ typedef long long ll;
 typedef long double ld;
 #define rep(i, n) for(int i = 0; i < n; i++)
 
-map<pair<ll, ll>, ll> check;
-ll n, k;
-ll a[100000];
-
-ll dp(ll x, ll k){
-    if(check.count(make_pair(x, k))){
-        return check[make_pair(x, k)];
-    }
-    if(k == 0)
-        return x;
-    else if(x >= 0 && k >= a[x])
-        return dp(x - 1, k) + dp(x - 1, k - a[x]);
-    else if(x >= 0)
-        return dp(x - 1, k);
-    else
-        return 0;
-}
-
 int main(void){
+    ll n, k;
     cin >> n >> k;
 
+    ll sum[n];
+    ll a[n];
     rep(i, n){
         cin >> a[i];
     }
 
-    ll sum = 0;
-    rep(i, n){
-        sum += dp(i, k);
+    sum[0] = a[0];
+    for(int i = 1; i < n; i++){
+        sum[i] = sum[i-1] + a[i];
     }
 
-    cout << sum << endl;
+
+    ll count = 0;
+    ll s = 0, start = 0, end = 0;
+    for(;;){
+        while(end < n && s < k){
+            s += a[end++];
+        }
+        if(s < k) break;
+
+        count += n - end + 1;
+
+        s -= a[start++];
+    }
+
+    cout << count << endl;
     return 0;
 }

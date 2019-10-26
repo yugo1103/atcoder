@@ -2,7 +2,10 @@
 using namespace std;
 typedef long long ll;
 typedef long double ld;
-#define rep(i, n) for(int i = 0; i < n; i++)
+#define rep(i,a,b) for(int i=a;i<b;i++)
+#define rrep(i,a,b) for(int i=a;i>=b;i--)
+#define fore(i,a) for(auto &i:a)
+#define all(x) (x).begin(),(x).end()
 
 //最大公約数,最小公倍数
 ll gcd(ll a, ll b) { return b ? gcd(b,a%b) : a; }
@@ -108,3 +111,22 @@ bool same(int x, int y){
     return find(x) == find(y);
 }
 
+//トポロジカルソート
+struct TopologicalSort {
+    vector<vector<int>> E;
+    TopologicalSort(int N) { E.resize(N); }
+    void add_edge(int a, int b) { E[a].push_back(b); }
+    bool visit(int v, vector<int>& order, vector<int>& color) {
+        color[v] = 1;
+        for (int u : E[v]) {
+            if (color[u] == 2) continue; if (color[u] == 1) return false;
+            if (!visit(u, order, color)) return false;
+        } order.push_back(v); color[v] = 2; return true;
+    }
+    bool sort(vector<int> &order) {
+        int n = E.size(); vector<int> color(n);
+        for (int u = 0; u < n; u++)
+            if (!color[u] && !visit(u, order, color)) return false;
+        reverse(order.begin(), order.end()); return true;
+    }
+};

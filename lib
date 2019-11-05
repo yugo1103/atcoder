@@ -130,3 +130,6 @@ struct TopologicalSort {
         reverse(order.begin(), order.end()); return true;
     }
 };
+
+//vector第一要素sort
+sort(s.begin(), s.end(), [&](vector<ll> a, vector<ll> b){return a[0] > b[0];});

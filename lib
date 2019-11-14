@@ -59,8 +59,35 @@ long long COM(ll n, ll k){
     return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
 }
 
+//ダイクストラ法
+//計算量O(|V|^2)
+int cost[MAX_V][MAX_V];
+int d[MAX_V];
+bool used[MAX_V];
+int V;
+
+void dijkstra(int s){
+    fill(d, d + V, INF);
+    fill(used, used + V, false);
+    d[s] = 0;
+
+    while(true){
+        int v = -1;
+        for(int u = 0; u < V; u++){
+            if(!used[u] && (v == -1 || d[u] < d[v])) v = u;
+        }
+        if(v == -1) break;
+        used[v] = true;
+
+        for(int u = 0; u < V; u++){
+            d[u] = min(d[u], d[v] + cost[v][u]);
+        }
+    }
+}
 
 //ワーシャル-フロイド法(全点対最短経路問題)
+//全ての2頂点間の最短路を求める
+//計算量O(|V|^3)
 int d[MAX_V][MAX_V]; //d[u][v]は辺e=(u,v)のコスト(存在しない場合はINF,d[i][i]=0)
 int V //頂点数
 

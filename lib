@@ -26,7 +26,7 @@ vector<pair<ll,int>> factorize(ll n) {
   return res;
 }
 
-//x以下の個数(2分探索)
+V/x以下の個数(2分探索)
 sort(a, a+n);
 count_a = upper_bound(a, a + n, x) - a;
 

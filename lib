@@ -11,6 +11,7 @@ typedef long double ld;
 ll gcd(ll a, ll b) { return b ? gcd(b,a%b) : a; }
 ll lcm(ll a, ll b) { return a/gcd(a,b)*b; }
 
+
 //素因数分解
 vector<pair<ll,int>> factorize(ll n) {
   vector<pair<ll,int>> res;
@@ -26,13 +27,36 @@ vector<pair<ll,int>> factorize(ll n) {
   return res;
 }
 
+
+//素数列挙(エラストテネスの篩)
+//計算量O(n log log n)
+int prime[MAX_N]
+bool is_prime[MAX_N + 1]
+
+//n以下の素数の数を返す
+int sieve(int n){
+    int p = 0;
+    for(int i = 0; i <= n; i++) is_prime[i] = true;
+    is_prime[0] = is_prime[1] = false;
+    for(int i = 2; i <= n; i++){
+        if(is_prime[i]){
+            prime[p++] = i;
+            for(int j = 2 * i; j <= n; j += i) is_prime[j] = false;
+        }
+    }
+    return p;
+}
+
+
 //x以下の個数(2分探索)
 sort(a, a+n);
 count_a = upper_bound(a, a + n, x) - a;
 
+
 //x以上の個数(2分探索)
 sort(b, b+n);
 count_b = b + n - lower_bound(b, b + n, x);
+
 
 //２項定理(MOD使用)
 const ll MAX = 510000;
@@ -58,6 +82,7 @@ long long COM(ll n, ll k){
     if (n < 0 || k < 0) return 0;
     return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
 }
+
 
 //ダイクストラ法
 //計算量O(|V|^2)
@@ -85,6 +110,7 @@ void dijkstra(int s){
     }
 }
 
+
 //ワーシャル-フロイド法(全点対最短経路問題)
 //全ての2頂点間の最短路を求める
 //計算量O(|V|^3)
@@ -97,6 +123,7 @@ void warshall_floyd(){
             for(int j = 0; j < V; j++)
                 d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
 }
+
 
 //Union-Find木
 int par[MAX_N]; //親
@@ -138,6 +165,7 @@ bool same(int x, int y){
     return find(x) == find(y);
 }
 
+
 //トポロジカルソート
 struct TopologicalSort {
     vector<vector<int>> E;
@@ -157,6 +185,7 @@ struct TopologicalSort {
         reverse(order.begin(), order.end()); return true;
     }
 };
+
 
 //vector第一要素sort
 sort(s.begin(), s.end(), [&](vector<ll> a, vector<ll> b){return a[0] > b[0];});

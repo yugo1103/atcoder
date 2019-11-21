@@ -27,7 +27,6 @@ vector<pair<ll,int>> factorize(ll n) {
   return res;
 }
 
-
 //素数列挙(エラストテネスの篩)
 //計算量O(n log log n)
 int prime[MAX_N]

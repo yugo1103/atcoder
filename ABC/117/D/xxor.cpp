@@ -7,55 +7,51 @@ typedef long double ld;
 #define fore(i,a) for(auto &i:a)
 #define all(x) (x).begin(),(x).end()
 
+ll dp[100][2];
+
 int main(void){
     ll n, k;
     cin >> n >> k;
 
-    ll tmp = k;
-    pair<ll, ll> b[500];
-    ll count = 0;
-    while(tmp){
-        if(tmp % 2 == 1){
-            b[count].second++;
-        }else{
-            b[count].first++;
-        }
-        tmp /= 2;
-        count++;
-    }
-
-    pair<ll, ll> a[500];
+    ll a[n];
     rep(i, 0, n){
-        ll tmp;
-        cin >> tmp;
+        cin >> a[i];
+    }
 
-        rep(j, 0, 50){
-            if(tmp % 2 == 1){
-                a[j].second++;
-            }else{
-                a[j].first++;
-            }
-            tmp /= 2;
+    rep(i, 0, 100){
+        rep(j, 0, 2){
+            dp[i][j] = -1;
         }
     }
 
+    dp[50][0] = 0;
 
-    ll sum = 0;
-    ll flag = false;
-    rrep(i, 499, 0){
-        if(i <= count - 1){
-            if(a[i].first <= a[i].second){
-                sum += pow(2, i) * a[i].second;
-                if(b[i].second) flag = true;
-            }else if(flag || b[i].second){
-                sum += pow(2, i) * a[i].first;
-            }else{
-                sum += pow(2, i) * a[i].second;
+    rrep(i, 49, 0){
+        ll mask = 1LL << i;
+        ll num = 0;
+        rep(j, 0, n){
+            if(a[j] & mask){
+                num++;
             }
-        }else{
-            sum += pow(2, i) * a[i].second;
+        }
+
+        ll score0 = mask * num;
+        ll score1 = mask * (n - num);
+
+        if(dp[i + 1][1] != -1){
+            dp[i][1] = max(dp[i][1], max(dp[i + 1][1] + score0, dp[i + 1][1] + score1));
+        }
+
+        if(dp[i + 1][0] != -1){
+            if(k & mask){
+                dp[i][1] = max(dp[i][1], dp[i + 1][0] + score0);
+                dp[i][0] = max(dp[i][0], dp[i + 1][0] + score1);
+            }else{
+                dp[i][0] = max(dp[i][0], dp[i + 1][0] + score0);
+            }
         }
     }
-    cout << sum << endl;
+
+    cout << max(dp[0][1], dp[0][0]) << endl;
     return 0;
 }

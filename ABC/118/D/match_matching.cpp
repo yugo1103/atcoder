@@ -28,32 +28,37 @@ int main(void){
     rep(i, 0, m){
         cin >> a[i];
     }
+    sort(a, a + m, greater<ll>());
 
     rep(i, 0, n + 1){
-        dp[i] = 0;
         rep(j, 0, m){
             if(i - conv(a[j]) < 0){
-                dp[i] = 0;
+                continue;
             }else{
-                dp[i] = max(dp[i - conv(a[j])] + 1, dp[i]);
+                if(i - conv(a[j]) == 0 || dp[i - conv(a[j])] != 0){
+                    dp[i] = max(dp[i - conv(a[j])] + 1, dp[i]);
+                }
             }
         }
     }
 
-    string ans = "";
-    ll remain = dp[n];
-    ll match = n;
-
-    while(match > 0){
-        rrep(i, m - 1, 0){
-            if(match - conv(a[i]) < 0) continue;
-            if(dp[match - conv(a[i])] == remain - 1){
-                ans += to_string(a[i]);
-                match -= conv(a[i]);
-                remain--;
+    ll tmp = n;
+    rrep(i, dp[n], 1){
+        rep(j, 0, m){
+            if(tmp - conv(a[j]) >= 0){
+                if(i == 1){
+                    if(tmp - conv(a[j]) == 0){
+                        cout << a[j];
+                        break;
+                    }
+                }else if(dp[tmp - conv(a[j])] == i - 1){
+                    tmp -= conv(a[j]);
+                    cout << a[j];
+                    continue;
+                }
             }
         }
     }
-    cout << ans << endl;
+    cout << endl;
     return 0;
 }

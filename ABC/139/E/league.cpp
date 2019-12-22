@@ -1,75 +1,82 @@
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-#define rep(i, n) for(int i = 0; i < n; i++)
-#define MAX_V 1005
-#define MAX_ID 1005*(1005-1)/2
+typedef long double ld;
+#define rep(i,a,b) for(ll i=a;i<b;i++)
+#define rrep(i,a,b) for(ll i=a;i>=b;i--)
+#define fore(i,a) for(auto &i:a)
+#define all(x) (x).begin(),(x).end()
 
-int game[MAX_V][MAX_V-1];
-int id[MAX_V][MAX_V-1];
-vector<int> path[MAX_ID];
+bool loop;
+bool visited[1000001];
+bool calculated[1000001];
+ll dp[1000001];
+ll ma = 0;
+vector<ll> no[100001];
 
-int to_id(int i, int j){
-    if(i > j)
-        swap(i, j);
-    return id[i][j];
-}
-
-bool visited[MAX_ID];
-bool calculated[MAX_ID];
-int dp[MAX_ID];
-
-int dfs(int id){
-    if(visited[id]){
-        if(!calculated == true) return -1;
-        return dp[id];
+ll dfs(ll node){
+    if(visited[node]){
+        if(!calculated[node]){
+            loop = true;
+            return -1;
+        }
+        return dp[node];
+    }else{
+        visited[node] = true;
+        dp[node] = 0;
+        fore(a, no[node]){
+            ll res = dfs(a);
+            if(res == -1)return -1;
+            dp[node] = max(res + 1, dp[node]);
+        }
     }
-    visited[id] = true;
-    dp[id] = 1;
-    for(int u: path[id]){
-        int res = dfs(u);
-        if(res == -1) return -1;
-        dp[id] = max(dp[id], res+1);
-    }
-    calculated[id] = true;
-    return dp[id];
+
+    calculated[node] = true;
+    return dp[node];
 }
-
-
 int main(void){
-    int n;
+    ll n;
     cin >> n;
 
-    rep(i, n)rep(j, n-1){
-        cin >> game[i][j];
-        game[i][j]--;
-    }
-
-    int count = 0;
-    rep(i, n)rep(j, n){
-        if(i < j){
-            id[i][j] = count;
-            count++;
+    ll a[n][n - 1];
+    ll game[n][n];
+    rep(i, 0, n){
+        rep(j, 0, n - 1){
+            cin >> a[i][j];
+            a[i][j]--;
         }
     }
 
-    rep(i, n){
-        rep(j, n-1)
-            game[i][j] = to_id(i, game[i][j]);
-        rep(j, n-2){
-            path[game[i][j+1]].push_back(game[i][j]);
+    ll c = 0;
+    rep(i, 0, n){
+        rep(j, 0, n){
+            if(i < j){
+                game[i][j] = c;
+                c++;
+            }else{
+                game[i][j] = -1;
+            }
         }
     }
 
-    int result, ans;
-    rep(i, count){
-        result = dfs(count);
-        if(result == -1){
-            puts("-1");
+    rep(i, 0, n){
+        rep(j, 0, n - 2){
+            ll t1 = min(i, a[i][j]);
+            ll t2 = max(i, a[i][j]);
+            ll t3 = min(i, a[i][j + 1]);
+            ll t4 = max(i, a[i][j + 1]);
+            no[game[t1][t2]].push_back(game[t3][t4]);
+        }
+    }
+
+    ll ans = 0;
+    rep(i, 0, c){
+        ans = max(dfs(i), ans);
+        if(loop){
+            cout << -1 << endl;
             return 0;
         }
-        ans = max(result, ans);
     }
 
-    printf("%d",ans);
+    cout << ans + 1 << endl;
 }
